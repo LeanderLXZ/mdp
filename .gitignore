@@ -1,0 +1,7 @@
+*.code-workspace
+*.vscode
+*.DS_Store
+__pycache__/
+*.py[cod]
+*/__pycache__/
+*.bk
