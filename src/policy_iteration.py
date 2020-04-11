@@ -16,7 +16,8 @@ class PolicyIteration(ValueIteration):
                  board_file_path, 
                  threshold=0.01,
                  init_policy_direction=None,
-                 use_arrow=False, 
+                 improve_p_with_v=False,
+                 use_arrow=False,
                  verbose=False):
         super(PolicyIteration, self).__init__(board_file_path, 
                          threshold=threshold, 
@@ -32,9 +33,11 @@ class PolicyIteration(ValueIteration):
                             self.direction_str[init_policy_direction]
                     else:
                         self.policy[i][j] = \
-                            self.directions_str[np.random.choice(4)]
+                            self.direction_str[np.random.choice(4)]
                 else:
                     self.policy[i][j] = self.values[i][j]
+
+        self.improve_p_with_v = improve_p_with_v
         
     
     def get_directions(self, policy_direction):
@@ -104,6 +107,7 @@ class PolicyIteration(ValueIteration):
             for _ in range(4):
                 q_values.append(
                     self.calc_q_value(i, j, directions, self.noises))
+                q_values = [round(v, 6) for v in q_values]
                 directions.append(directions.pop(0))
             p = self.direction_str[np.argmax(q_values)]
             if p != new_policy[i][j]:
@@ -143,8 +147,10 @@ class PolicyIteration(ValueIteration):
                 pass
             
             try:
-                # self.improve_policy()
-                self.improve_policy_with_value()
+                if self.improve_p_with_v:
+                    self.improve_policy_with_value()
+                else:
+                    self.improve_policy()
                 # if self.verbose:
                 #     print('Values:')
                 #     print(pd.DataFrame(self.values))
@@ -164,15 +170,11 @@ class PolicyIteration(ValueIteration):
             
             i += 1
             
-        return self.board_size, count, run_time
+        return self.board_size, count, i, run_time
 
             
 if __name__ == '__main__':
 
-    _ = PolicyIteration(
-        '../input/i7.txt', 
-        threshold=0.01, 
-        init_policy_direction=1,
-        use_arrow=True,
-        verbose=False
-    ).run()
+    _ = PolicyIteration('../inputs/i7.txt', threshold=0.01, 
+                        init_policy_direction=1, improve_p_with_v=True,
+                        use_arrow=True, verbose=True).run()

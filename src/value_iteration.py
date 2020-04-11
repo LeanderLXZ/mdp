@@ -30,11 +30,11 @@ class ValueIteration(object):
         self.threshold = threshold
         self.verbose = verbose
         
-        # Policy
+        # Initialize the policy
         self.policy = []
         for _ in range(self.board_size):
             self.policy.append([None] * self.board_size)
-        
+            
         if use_arrow:
             self.direction_str = ['↑', '→', '↓', '←']
         else:
@@ -162,9 +162,5 @@ class ValueIteration(object):
             
 if __name__ == '__main__':
 
-    _ = ValueIteration(
-        '../input/i7.txt',
-        threshold=0.01,
-        use_arrow=True,
-        verbose=False
-    ).run()
+    _ = ValueIteration('../inputs/i1.txt', threshold=0.01,
+                       use_arrow=True, verbose=True).run()
